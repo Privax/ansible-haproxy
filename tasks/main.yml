@@ -17,11 +17,23 @@
     - configuration
     - haproxy
     - haproxy-add-repository
+  when: ansible_distribution == "Ubuntu"
+
+- name: add repository from debian backports
+  apt_repository:
+    repo: "{{ haproxy_debian_repository }}"
+    update_cache: true
+  tags:
+    - configuration
+    - haproxy
+    - haproxy-add-repository
+  when: ansible_distribution == "Debian"
 
 - name: install dependencies
   apt:
     name: "{{ item }}"
     state: latest
+    default_release: "{{ 'jessie-backports' if ansible_distribution == 'Debian' else null }}"
   with_items: "{{ haproxy_dependencies }}"
   tags:
     - configuration
@@ -32,6 +44,7 @@
   apt:
     name: "{{ item }}"
     state: latest
+    default_release: "{{ 'jessie-backports' if ansible_distribution == 'Debian' else null }}"
   with_items: "{{ haproxy_install }}"
   tags:
     - configuration
