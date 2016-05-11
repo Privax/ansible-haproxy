@@ -31,6 +31,10 @@ frontend {{ frontend.name }}
   timeout {{ timeout.type }} {{ timeout.timeout }}
 {% endfor %}
 
+{% for custom in frontend.custom | default([]) %}
+  {{ custom }}
+{% endfor %}
+
   default_backend {{ frontend.default_backend }}
 
 {% for rspadd in frontend.rspadd | default([]) %}
